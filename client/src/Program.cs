@@ -1,29 +1,19 @@
-using Microsoft.AspNetCore.SignalR.Client;
+using mutual.client;
 
-var connection = new HubConnectionBuilder()
-    .WithUrl("http://localhost:5250/chat")
-    .WithAutomaticReconnect()
-    .Build();
+Client c = new(args[0]);
 
-connection.On<string, string>("ReceiveMessage", (user, message) => receiveMessage(user, message));
-
-static void receiveMessage(string user, string message)
-{
-    Console.WriteLine($"User: {user} Message: {message}");
-}
-
-try { await connection.StartAsync(); }
-catch (Exception e) { Console.WriteLine($"Error connecting: {e}"); }
-
-Task.Run(async () =>
+await Task.Run(() =>
 {
     while (true)
     {
         Console.Write(">> ");
-        string message = Console.ReadLine();
-        try { await connection.InvokeAsync("SendMessage", "User", message); }
+	string? message;
+	do { message = Console.ReadLine(); } 
+	while (message == null);
+        try { c.SendMessage(message); }
         catch { Console.WriteLine($"Error sending message: {message}"); }
     }
 });
 
 await Task.Delay(-1);
+
