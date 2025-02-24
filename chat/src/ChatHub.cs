@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.SignalR;
-using Mutual.Model;
+using Model;
 
 public class ChatHub : Hub
 {
-    public async Task SendMessage(Message m)
-        => await Clients.All.SendAsync("ReceiveMessage", m);
+    public async Task SendMessage(Message M)
+        => await Clients.All.SendAsync("ReceiveMessage", M);
 
     public override Task OnConnectedAsync()
     {
-	Console.WriteLine($" Client : {Context.ConnectionId}, connected to ChatHub");
+	Console.WriteLine($" Client: {Context.ConnectionId}, connected to ChatHub");
 	return base.OnConnectedAsync();
     }
 
