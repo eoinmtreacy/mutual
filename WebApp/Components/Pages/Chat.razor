@@ -5,19 +5,38 @@
 
 <h1>Chat</h1>
 
-<p role="status">Current count: @currentCount</p>
+<input @bind="content" placeholder="Message"/>
+<button class="btn btn-primary" @onclick="SendMessage">Click me</button>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<ul>
+    @foreach (Message M in messages)
+    {
+        <li>From: @M.Sender - @M.Content - @M.Timestamp</li>
+    }
+</ul>
+
 
 @code {
+    static string?          content     = "";
+    static List<Message>    messages    = new(); 
+    static WebClient        wc          = new("eoin");
+
+    private void SendMessage()
+    {
+        if (content != "")
+        {
+            Message M = new(wc.Username, content, DateTime.Now);
+            wc.SendMessage(M);
+            content = "";
+        }
+    } 
+
     class WebClient(string username) : AbstractClient(username)
     {
-        
+        public override void ReceiveMessage(Message M)
+        {
+            messages.Add(M);
+        }
     }
-    private int currentCount = 0;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
 }
