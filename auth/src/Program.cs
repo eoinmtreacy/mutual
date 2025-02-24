@@ -10,9 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-Console.WriteLine(builder.Configuration["Authentication__Google__ClientId"]);
-Console.WriteLine(builder.Configuration["Authentication__Google__ClientSecret"]);
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -47,8 +44,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 else
 {
@@ -66,7 +61,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
-app.MapSwagger();
 
 app.Run();
