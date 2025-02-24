@@ -1,0 +1,23 @@
+@page "/chat"
+@rendermode InteractiveServer
+
+<PageTitle>Chat</PageTitle>
+
+<h1>Chat</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    class WebClient(string username) : AbstractClient(username)
+    {
+        
+    }
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
