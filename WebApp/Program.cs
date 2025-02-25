@@ -6,6 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<WebAppClient>(provider =>
+{
+    var logger = provider.GetRequiredService<ILogger<WebAppClient>>();
+    return new WebAppClient("eoin", logger);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,5 +1,6 @@
 @page "/chat"
 @rendermode InteractiveServer
+@inject WebAppClient WebAppClient
 
 <PageTitle>Chat</PageTitle>
 
@@ -9,7 +10,7 @@
 <button class="btn btn-primary" @onclick="SendMessage">Click me</button>
 
 <ul>
-    @foreach (Message M in messages)
+    @foreach (Message M in WebAppClient.MessageList)
     {
         <li>From: @M.Sender - @M.Content - @M.Timestamp</li>
     }
@@ -17,26 +18,16 @@
 
 
 @code {
-    static string?          content     = "";
-    static List<Message>    messages    = new(); 
-    static WebClient        wc          = new("eoin");
+    static string content = "";
 
     private void SendMessage()
     {
         if (content != "")
         {
-            Message M = new(wc.Username, content, DateTime.Now);
-            wc.SendMessage(M);
+            Message M = new(WebAppClient.Username, content, DateTime.Now);
+            WebAppClient.SendMessage(M);
             content = "";
         }
     } 
-
-    class WebClient(string username) : AbstractClient(username)
-    {
-        public override void ReceiveMessage(Message M)
-        {
-            messages.Add(M);
-        }
-    }
 
 }
