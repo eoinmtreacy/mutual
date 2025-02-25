@@ -15,7 +15,7 @@ public abstract class AbstractClient
         Username = username;
         _logger = logger;
         Connection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:5250/chat")
+            .WithUrl("https://localhost:7088/chat")
             .WithAutomaticReconnect()
             .Build();
         Connection.On<Message>("ReceiveMessage", ReceiveMessage);
