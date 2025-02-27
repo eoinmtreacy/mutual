@@ -70,6 +70,6 @@ public abstract class Client
         }
     }
 
-    protected abstract void ReceiveMessage(Message M);
+    public abstract Task ReceiveMessage(Message M);
 
 }
