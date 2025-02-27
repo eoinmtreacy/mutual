@@ -1,23 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
-
 string MyAllowedOrigins = "myAllowedOrigins";
-
+builder.Services.AddSignalR();
 builder.Services.AddCors(o => 
 	{
 	    o.AddPolicy(MyAllowedOrigins, policy =>
 		    {
-			policy.WithOrigins("https://localhost:7222");
-			policy.WithMethods("GET", "POST");
+			policy.AllowAnyOrigin();
+			policy.AllowAnyHeader();
+			policy.AllowAnyMethod();
 			policy.AllowCredentials();
 		    });
 	    });
-
-builder.Services.AddSignalR();
-
 var app = builder.Build();
-
-app.UseHttpsRedirection();
-
 app.UseCors(MyAllowedOrigins);
 app.MapHub<ChatHub>("/chat");
+app.UseHttpsRedirection();
 app.Run();
