@@ -1,0 +1,62 @@
+@page "/chat"
+@using Microsoft.AspNetCore.SignalR.Client
+@using Share.Model
+@inject NavigationManager Navigation
+@inject WebClient WebClient
+@implements IAsyncDisposable
+
+<PageTitle>Chat</PageTitle>
+
+<div class="form-group">
+    <label>
+        User:
+        <input @bind="userInput" />
+    </label>
+</div>
+<div class="form-group">
+    <label>
+        Message:
+        <input @bind="messageInput" size="50" />
+    </label>
+</div>
+<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
+
+<hr>
+
+<ul id="messagesList">
+    @foreach (Message M in WebClient.MessageList)
+    {
+        <li>@M.Sender @M.Content @M.Timestamp</li>
+    }
+</ul>
+
+@code {
+    private List<string> messages = [];
+    private string? userInput;
+
+    private string? messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await WebClient.StartConnection();
+    }
+
+    private async Task Send()
+    {
+        @* if (WebClient.Connection is not null)
+        {
+            await WebClient.SendAsync("SendMessage", userInput, messageInput);
+        } *@
+    }
+
+    public bool IsConnected => true;
+        @* WebClient.Connection?.State == HubConnectionState.Connected; *@
+
+    public async ValueTask DisposeAsync()
+    {
+        @* if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        } *@
+    }
+}
