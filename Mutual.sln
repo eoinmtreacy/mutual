@@ -7,12 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "Share\Share.csproj", "{32D8534A-C4F0-4BB3-BB9E-736D9B867372}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{95358D43-4927-4D95-B0E7-189F417865FF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp\WebApp.csproj", "{CD039512-696B-476C-9B86-A3F979FEF6A3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Client", "WebApp\WebApp.Client\WebApp.Client.csproj", "{541C7E5F-A420-4024-9B97-2E22CAC520BD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,17 +24,5 @@ Global
 		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD039512-696B-476C-9B86-A3F979FEF6A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD039512-696B-476C-9B86-A3F979FEF6A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD039512-696B-476C-9B86-A3F979FEF6A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD039512-696B-476C-9B86-A3F979FEF6A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{541C7E5F-A420-4024-9B97-2E22CAC520BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{541C7E5F-A420-4024-9B97-2E22CAC520BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{541C7E5F-A420-4024-9B97-2E22CAC520BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{541C7E5F-A420-4024-9B97-2E22CAC520BD}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{CD039512-696B-476C-9B86-A3F979FEF6A3} = {95358D43-4927-4D95-B0E7-189F417865FF}
-		{541C7E5F-A420-4024-9B97-2E22CAC520BD} = {95358D43-4927-4D95-B0E7-189F417865FF}
 	EndGlobalSection
 EndGlobal
