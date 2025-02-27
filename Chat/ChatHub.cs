@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.SignalR;
-using Model;
+using Share;
+using Share.Model;
 
-public class ChatHub : Hub
+public class ChatHub : Hub<Client>
 {
     private readonly ILogger _logger;
 
@@ -9,16 +10,17 @@ public class ChatHub : Hub
     {
 	_logger = logger;
     }
-    public async Task SendMessage(string user, string message)
+
+    public async Task SendMessage(Message M)
     {
 	try
 	{
-	    await Clients.All.SendAsync("ReceiveMessage", user, message);
-	    _logger.LogInformation("Sending message: '{}' from user: '{}'", message, user);
+	    await Clients.All.ReceiveMessage(M);
+	    _logger.LogInformation("Sending M.Content: '{}' from M.Sender: '{}'", M.Content, M.Sender);
 	}
 	catch (Exception e)
 	{
-	    _logger.LogError("Error sending message: '{}' from user: '{}' -- {}", message, user, e);
+	    _logger.LogError("Error sending M.Content: '{}' from M.Sender: '{}' -- Error: {}", M.Content, M.Sender, e);
 	}
     }
 
@@ -31,7 +33,7 @@ public class ChatHub : Hub
 	}
 	catch (Exception e)
 	{
-	    _logger.LogError("Error connecting client: '{}' to ChatHub", Context.ConnectionId, e);
+	    _logger.LogError("Error connecting client: '{}' to ChatHub -- Error: {}", Context.ConnectionId, e);
 	    return Task.CompletedTask;
 	}
     }

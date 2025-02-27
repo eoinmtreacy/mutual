@@ -1,16 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj" />
-    <ProjectReference Include="..\Client\Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
+    <ProjectReference Include="..\Share\Share.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
