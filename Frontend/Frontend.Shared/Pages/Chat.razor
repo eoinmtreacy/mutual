@@ -38,7 +38,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        WebClient.OnMessageReceived += UpdateMessageList;
         await WebClient.StartConnection();
+    }
+
+    private void UpdateMessageList()
+    {
+        InvokeAsync(StateHasChanged);
     }
 
     private async Task Send()
@@ -47,16 +53,12 @@
         {
             Message M = new(WebClient.Username, messageInput, DateTime.Now);
             await WebClient.SendMessage(M);
-            await InvokeAsync(StateHasChanged);
             messageInput = "";
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        @* if (hubConnection is not null)
-        {
-            await hubConnection.DisposeAsync();
-        } *@
+        WebClient.OnMessageReceived -= UpdateMessageList;
     }
 }
