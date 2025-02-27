@@ -6,11 +6,11 @@ namespace Share;
 
 public abstract class Client
 {
-    private readonly HubConnection 	Connection;
-    private readonly ILogger 		_logger;
-    private readonly string 		_url;
+    private readonly ILogger    _logger;
+    private readonly string     _url;
 
-    public string Username { get; }
+    public HubConnection    Connection  { get; }
+    public string           Username    { get; }
 
     public Client(string url, string username, ILogger logger)
     {

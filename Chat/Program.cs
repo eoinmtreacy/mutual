@@ -5,7 +5,7 @@ builder.Services.AddCors(options =>
 	{
 	    options.AddPolicy(MyAllowedOrigins, policy =>
 		    {
-			policy.WithOrigins("https://localhost:7193");
+			policy.WithOrigins("https://localhost:7208");
 			policy.WithMethods("GET", "POST");
 			policy.AllowAnyHeader();
 			policy.AllowCredentials();
