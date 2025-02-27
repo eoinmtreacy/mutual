@@ -4,18 +4,18 @@ using Share.Model;
 
 namespace Share;
 
-public abstract class Client
+public abstract class Client 
 {
-    private readonly ILogger    _logger;
     private readonly string     _url;
+    public ILogger Logger { get; }
 
-    public HubConnection    Connection  { get; }
-    public string           Username    { get; }
+    public HubConnection Connection  { get; }
+    public string Username    { get; }
 
     public Client(string url, string username, ILogger logger)
     {
         Username = username;
-        _logger = logger;
+        Logger = logger;
 	_url = url;
         Connection = new HubConnectionBuilder()
             .WithUrl(url)
@@ -36,25 +36,25 @@ public abstract class Client
 	}
         catch (Exception e) 
 	{ 
-	    _logger.LogError("Error sending message: {} -- Error: {}", M.Content, e); 
+	    Logger.LogError("Error sending message: {} -- Error: {}", M.Content, e); 
 	}
     }
 
     protected virtual Task OnConnectionClosed(Exception? e)
 	{
-		_logger.LogError("Client '{}' connection to {} closed - Error: {}", Username, _url, e);
+		Logger.LogError("Client '{}' connection to {} closed - Error: {}", Username, _url, e);
 		return Task.CompletedTask;
 	}
 
     protected virtual Task OnReconnecting(Exception? e)
 	{
-		_logger.LogError("Client '{}' reconnecting to {} - Error: {}", Username, _url, e);
+		Logger.LogError("Client '{}' reconnecting to {} - Error: {}", Username, _url, e);
 		return Task.CompletedTask;
 	}
 
     protected virtual Task OnReconnected(string? e)
 	{
-		_logger.LogInformation("Client '{}' reconnected to {} - Connection Id: {}", Username, _url, e);
+		Logger.LogInformation("Client '{}' reconnected to {} - Connection Id: {}", Username, _url, e);
 		return Task.CompletedTask;
 	}
 
@@ -63,10 +63,10 @@ public abstract class Client
 	    try 
         { 
             await Connection.StartAsync();
-            _logger.LogInformation("Client '{}' connected to {}", Username, _url);
+            Logger.LogInformation("Client '{}' connected to {}", Username, _url);
         }
 	    catch (Exception e) { 
-            _logger.LogError("Client '{}' failed to connect to {} - Error: {e}", Username, _url, e);
+            Logger.LogError("Client '{}' failed to connect to {} - Error: {e}", Username, _url, e);
         }
     }
 

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using Share;
 using Share.Model;
 
-public class ChatHub : Hub<Client>
+public class ChatHub : Hub<IClient>
 {
     private readonly ILogger _logger;
 
@@ -16,11 +16,11 @@ public class ChatHub : Hub<Client>
 	try
 	{
 	    await Clients.All.ReceiveMessage(M);
-	    _logger.LogInformation("Sending M.Content: '{}' from M.Sender: '{}'", M.Content, M.Sender);
+	    _logger.LogInformation("Sending message: '{}' from user: '{}'", M.Content, M.Sender);
 	}
 	catch (Exception e)
 	{
-	    _logger.LogError("Error sending M.Content: '{}' from M.Sender: '{}' -- Error: {}", M.Content, M.Sender, e);
+	    _logger.LogError("Error sending message: '{}' from user: '{}' -- Error: {}", M.Content, M.Sender, e);
 	}
     }
 

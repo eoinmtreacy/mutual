@@ -19,7 +19,7 @@
         <input @bind="messageInput" size="50" />
     </label>
 </div>
-<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
+<button @onclick="Send" disabled="@(WebClient.Connection?.State != HubConnectionState.Connected)">Send</button>
 
 <hr>
 
@@ -43,14 +43,14 @@
 
     private async Task Send()
     {
-        @* if (WebClient.Connection is not null)
+        if (messageInput != null)
         {
-            await WebClient.SendAsync("SendMessage", userInput, messageInput);
-        } *@
+            Message M = new(WebClient.Username, messageInput, DateTime.Now);
+            await WebClient.SendMessage(M);
+            await InvokeAsync(StateHasChanged);
+            messageInput = "";
+        }
     }
-
-    public bool IsConnected => true;
-        @* WebClient.Connection?.State == HubConnectionState.Connected; *@
 
     public async ValueTask DisposeAsync()
     {
