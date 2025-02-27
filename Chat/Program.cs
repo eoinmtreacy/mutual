@@ -1,13 +1,13 @@
 var builder = WebApplication.CreateBuilder(args);
 string MyAllowedOrigins = "myAllowedOrigins";
 builder.Services.AddSignalR();
-builder.Services.AddCors(o => 
+builder.Services.AddCors(options => 
 	{
-	    o.AddPolicy(MyAllowedOrigins, policy =>
+	    options.AddPolicy(MyAllowedOrigins, policy =>
 		    {
-			policy.AllowAnyOrigin();
+			policy.WithOrigins("https://localhost:7193");
+			policy.WithMethods("GET", "POST");
 			policy.AllowAnyHeader();
-			policy.AllowAnyMethod();
 			policy.AllowCredentials();
 		    });
 	    });
