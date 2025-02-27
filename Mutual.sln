@@ -5,9 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat.csproj", "{D96E8187-BFCE-48D9-AC7E-B773F1DC9718}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{CCBE0EF2-F75C-4C58-AA70-A3D616FC01B5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{32C630AD-8B14-43D7-975D-B66706AE934B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "Share\Share.csproj", "{32D8534A-C4F0-4BB3-BB9E-736D9B867372}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,13 +20,9 @@ Global
 		{D96E8187-BFCE-48D9-AC7E-B773F1DC9718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D96E8187-BFCE-48D9-AC7E-B773F1DC9718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D96E8187-BFCE-48D9-AC7E-B773F1DC9718}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCBE0EF2-F75C-4C58-AA70-A3D616FC01B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCBE0EF2-F75C-4C58-AA70-A3D616FC01B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCBE0EF2-F75C-4C58-AA70-A3D616FC01B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCBE0EF2-F75C-4C58-AA70-A3D616FC01B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32C630AD-8B14-43D7-975D-B66706AE934B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32C630AD-8B14-43D7-975D-B66706AE934B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32C630AD-8B14-43D7-975D-B66706AE934B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32C630AD-8B14-43D7-975D-B66706AE934B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D8534A-C4F0-4BB3-BB9E-736D9B867372}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
