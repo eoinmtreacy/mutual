@@ -24,18 +24,26 @@ public class ChatHub : Hub<IClient>
 	}
     }
 
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
 	try
 	{
 	    _logger.LogInformation("Client: '{}', connecting to ChatHub", Context.ConnectionId);
-	    return base.OnConnectedAsync();
+	    await base.OnConnectedAsync();
 	}
 	catch (Exception e)
 	{
 	    _logger.LogError("Error connecting client: '{}' to ChatHub -- Error: {}", Context.ConnectionId, e);
-	    return Task.CompletedTask;
 	}
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? e)
+    {
+	if (e != null)
+	{
+	    _logger.LogError("Connection {} disconnected in error: {}", Context.ConnectionId, e);
+	}
+	await base.OnDisconnectedAsync(e);
     }
 
 }
