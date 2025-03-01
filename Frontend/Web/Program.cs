@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Add device-specific services used by the Frontend.Shared project
+// Add device-specific services used by the App.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
 builder.Services.AddScoped<WebClient>(provider =>
