@@ -1,6 +1,8 @@
-using Share.Model;
+namespace Share;
+using Model;
 
 public interface IClient
 {
-    Task ReceiveMessage(Message M);
+   public Task ReceiveMessage(Message message);
+   
 }

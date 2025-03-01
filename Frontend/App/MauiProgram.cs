@@ -16,7 +16,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
-        // Add device-specific services used by the Frontend.Shared project
+        // Add device-specific services used by the App.Shared project
         builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
         builder.Services.AddMauiBlazorWebView();

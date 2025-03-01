@@ -1,0 +1,49 @@
+@page "/chat"
+@using Share.Model
+@inject Client Client
+
+<PageTitle>Chat</PageTitle>
+
+<div class="form-group">
+    <label>
+        Message:
+        <input @bind="_messageInput" size="50" />
+    </label>
+</div>
+
+<button @onclick="Send" disabled="@(!Client.IsConnected())">Send</button>
+
+<hr>
+
+<ul id="messagesList">
+    @foreach (var message in Client.GetMessageList())
+    {
+        <li>@message.Sender @message.Content @message.Timestamp</li>
+    }
+</ul>
+
+@code {
+    private string? _messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Client.OnMessageReceived += HandleMessageReceived;
+        await Client.StartConnection();
+    }
+
+    private void HandleMessageReceived()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Send()
+    {
+        if (!string.IsNullOrEmpty(_messageInput))
+        {
+            Message message = new(Client.Username, _messageInput, DateTime.Now);
+            await Client.SendMessage(message);
+            _messageInput = "";
+        }
+    }
+    
+}
