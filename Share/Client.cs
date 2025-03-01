@@ -4,52 +4,57 @@ using Share.Model;
 
 namespace Share;
 
-public abstract class Client
+public abstract class Client : IClient
 {
-    private readonly string _url;
-    public ILogger Logger { get; }
-
-    public HubConnection Connection { get; }
     public string Username { get; }
+    
+    private readonly string _url;
+    private readonly HubConnection _connection;
+    private readonly ILogger _logger;
 
-    public Client(string url, string username, ILogger logger)
+    public event Action? OnMessageReceived;
+
+    protected Client(string url, string username, ILogger logger)
     {
         Username = username;
-        Logger = logger;
         _url = url;
-        Connection = new HubConnectionBuilder().WithUrl(url).WithAutomaticReconnect().Build();
-        Connection.On<Message>("ReceiveMessage", ReceiveMessage);
-        Connection.Closed += e => OnConnectionClosed(e);
-        Connection.Reconnecting += e => OnReconnecting(e);
-        Connection.Reconnected += e => OnReconnected(e);
+        _logger = logger;
+        _connection = new HubConnectionBuilder()
+            .WithUrl(url)
+            .WithAutomaticReconnect()
+            .Build();
+        _connection.On<Message>("ReceiveMessage", ReceiveMessage);
+        _connection.Closed += OnConnectionClosed;
+        _connection.Reconnecting += OnReconnecting;
+        _connection.Reconnected += OnReconnected;
     }
 
     public async Task SendMessage(Message message)
     {
         try
         {
-            await Connection.InvokeAsync("SendMessage", message);
+            await _connection.InvokeAsync("SendMessage", message);
         }
         catch (Exception e)
         {
-            Logger.LogError("Error sending message: {} -- Error: {}", message.Content, e);
+            _logger.LogError("Error sending message: {} -- Error: {}", message.Content, e);
         }
     }
-    public Task OnConnectionClosed(Exception? e)
+    private Task OnConnectionClosed(Exception? e)
     {
-        Logger.LogError("Client '{}' connection to {} closed - Error: {}", Username, _url, e);
+        _logger.LogError("Client '{}' connection to {} closed - Error: {}", Username, _url, e);
         return Task.CompletedTask;
     }
 
-    public virtual Task OnReconnecting(Exception? e)
+    private Task OnReconnecting(Exception? e)
     {
-        Logger.LogError("Client '{}' reconnecting to {} - Error: {}", Username, _url, e);
+        _logger.LogError("Client '{}' reconnecting to {} - Error: {}", Username, _url, e);
         return Task.CompletedTask;
     }
 
-    public virtual Task OnReconnected(string? e)
+    private Task OnReconnected(string? e)
     {
-        Logger.LogInformation(
+        _logger.LogInformation(
             "Client '{}' reconnected to {} - Connection Id: {}",
             Username,
             _url,
@@ -62,18 +67,26 @@ public abstract class Client
     {
         try
         {
-            await Connection.StartAsync();
-            Logger.LogInformation("Client '{}' connected to {}", Username, _url);
+            await _connection.StartAsync();
+            _logger.LogInformation("Client '{}' connected to {}", Username, _url);
         }
         catch (Exception e)
         {
-            Logger.LogError("Client '{}' failed to connect to {} - Error: {e}", Username, _url, e);
+            _logger.LogError("Client '{}' failed to connect to {} - Error: {e}", Username, _url, e);
         }
     }
 
-    public bool IsConnected() => Connection.State == HubConnectionState.Connected;
+    public bool IsConnected() => _connection.State == HubConnectionState.Connected;
+
+    public Task ReceiveMessage(Message message)
+    {
+        ProcessMessage(message);
+        OnMessageReceived?.Invoke();
+        _logger.LogInformation("Client '{}' received message from {}", Username, _url);
+        return Task.CompletedTask;
+    }
     
-    public abstract Task ReceiveMessage(Message m);
+    public abstract void ProcessMessage(Message message);
     
     public abstract List<Message> GetMessageList();
 }

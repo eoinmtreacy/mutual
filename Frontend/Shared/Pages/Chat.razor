@@ -1,15 +1,13 @@
 @page "/chat"
 @using Share.Model
-@inject NavigationManager Navigation
 @inject Client Client
-@implements IAsyncDisposable
 
 <PageTitle>Chat</PageTitle>
 
 <div class="form-group">
     <label>
         Message:
-        <input @bind="messageInput" size="50" />
+        <input @bind="_messageInput" size="50" />
     </label>
 </div>
 
@@ -25,31 +23,27 @@
 </ul>
 
 @code {
-    private string? messageInput;
+    private string? _messageInput;
 
     protected override async Task OnInitializedAsync()
     {
-        // IClient.OnMessageReceived += UpdateMessageList;
+        Client.OnMessageReceived += HandleMessageReceived;
         await Client.StartConnection();
     }
 
-    private void UpdateMessageList()
+    private void HandleMessageReceived()
     {
         InvokeAsync(StateHasChanged);
     }
 
     private async Task Send()
     {
-        if (messageInput != null)
+        if (!string.IsNullOrEmpty(_messageInput))
         {
-            Message message = new(Client.Username, messageInput, DateTime.Now);
+            Message message = new(Client.Username, _messageInput, DateTime.Now);
             await Client.SendMessage(message);
-            messageInput = "";
+            _messageInput = "";
         }
     }
-
-    public async ValueTask DisposeAsync()
-    {
-        // WebClient.OnMessageReceived -= UpdateMessageList;
-    }
+    
 }

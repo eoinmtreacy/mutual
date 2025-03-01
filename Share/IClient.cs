@@ -3,6 +3,6 @@ using Model;
 
 public interface IClient
 {
-    public Task ReceiveMessage(Message message);
-    
+   public Task ReceiveMessage(Message message);
+   
 }
