@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
+using Share;
 using Share.Model;
 
-namespace Share;
+namespace Frontend.Shared.Services;
 
 public abstract class Client : IClient
 {
     public string Username { get; }
-    
+    public List<Message> MessageList { get; }
+
     private readonly string _url;
     private readonly HubConnection _connection;
     private readonly ILogger _logger;
@@ -17,6 +19,7 @@ public abstract class Client : IClient
     protected Client(string url, string username, ILogger logger)
     {
         Username = username;
+        MessageList = [];
         _url = url;
         _logger = logger;
         _connection = new HubConnectionBuilder()
@@ -85,8 +88,7 @@ public abstract class Client : IClient
         _logger.LogInformation("Client '{}' received message from {}", Username, _url);
         return Task.CompletedTask;
     }
+
+    protected abstract void ProcessMessage(Message message);
     
-    public abstract void ProcessMessage(Message message);
-    
-    public abstract List<Message> GetMessageList();
 }

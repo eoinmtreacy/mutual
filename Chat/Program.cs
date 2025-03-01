@@ -1,16 +1,22 @@
+using Chat;
+
 var builder = WebApplication.CreateBuilder(args);
 string MyAllowedOrigins = "myAllowedOrigins";
 builder.Services.AddSignalR();
-builder.Services.AddCors(options => 
-	{
-	    options.AddPolicy(MyAllowedOrigins, policy =>
-		    {
-			policy.WithOrigins("https://localhost:7208");
-			policy.WithMethods("GET", "POST");
-			policy.AllowAnyHeader();
-			policy.AllowCredentials();
-		    });
-	    });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        MyAllowedOrigins,
+        policy =>
+        {
+            policy
+                .WithOrigins("https://localhost:7208")
+                .WithMethods("GET", "POST")
+                .AllowAnyHeader()
+                .AllowCredentials();
+        }
+    );
+});
 var app = builder.Build();
 app.UseCors(MyAllowedOrigins);
 app.MapHub<ChatHub>("/chat");

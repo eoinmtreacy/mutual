@@ -1,4 +1,4 @@
-@page "/chat"
+@page "/"
 @using Share.Model
 @inject Client Client
 
@@ -16,7 +16,7 @@
 <hr>
 
 <ul id="messagesList">
-    @foreach (var message in Client.GetMessageList())
+    @foreach (var message in Client.MessageList)
     {
         <li>@message.Sender @message.Content @message.Timestamp</li>
     }
