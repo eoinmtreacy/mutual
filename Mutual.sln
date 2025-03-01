@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "Share\Share.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{D6C9BA2C-F1E8-49B2-B095-6C12A4D3EA7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Frontend\Web\Web.csproj", "{4E07D484-96B3-4A4E-9151-FDF5F015333E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend.Web", "Frontend\Frontend.Web\Frontend.Web.csproj", "{4E07D484-96B3-4A4E-9151-FDF5F015333E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Frontend\Shared\Shared.csproj", "{27CFA56C-B2FB-4DB6-B124-F37E41225CD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend.Shared", "Frontend\Frontend.Shared\Frontend.Shared.csproj", "{27CFA56C-B2FB-4DB6-B124-F37E41225CD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "Frontend\App\App.csproj", "{AA7FB50E-DA45-4D47-B2E7-CD7D74092E44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend\Frontend.csproj", "{AA7FB50E-DA45-4D47-B2E7-CD7D74092E44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@ public class FormFactor : IFormFactor
 {
     public string GetFormFactor()
     {
-        return "Web";
+        return "Frontend.Web";
     }
 
     public string GetPlatform()
