@@ -1,7 +1,6 @@
 using Frontend.Web.Components;
 using Frontend.Shared.Services;
 using Frontend.Web.Services;
-using Share;
 
 var builder = WebApplication.CreateBuilder(args);
 
