@@ -1,6 +1,7 @@
 using Frontend.Web.Components;
 using Frontend.Shared.Services;
 using Frontend.Web.Services;
+using Share;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ builder.Services.AddRazorComponents()
 // Add device-specific services used by the App.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-builder.Services.AddScoped<WebClient>(provider =>
+builder.Services.AddScoped<Client, WebClient>(provider =>
 {
     ILogger logger = provider.GetRequiredService<ILogger<WebClient>>();
     return new WebClient("https://localhost:7088/chat", "eoin", logger);

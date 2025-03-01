@@ -1,45 +1,36 @@
 @page "/chat"
-@using Microsoft.AspNetCore.SignalR.Client
 @using Share.Model
 @inject NavigationManager Navigation
-@inject WebClient WebClient
+@inject Client Client
 @implements IAsyncDisposable
 
 <PageTitle>Chat</PageTitle>
 
 <div class="form-group">
     <label>
-        User:
-        <input @bind="userInput" />
-    </label>
-</div>
-<div class="form-group">
-    <label>
         Message:
         <input @bind="messageInput" size="50" />
     </label>
 </div>
-<button @onclick="Send" disabled="@(WebClient.Connection?.State != HubConnectionState.Connected)">Send</button>
+
+<button @onclick="Send" disabled="@(!Client.IsConnected())">Send</button>
 
 <hr>
 
 <ul id="messagesList">
-    @foreach (Message M in WebClient.MessageList)
+    @foreach (var message in Client.GetMessageList())
     {
-        <li>@M.Sender @M.Content @M.Timestamp</li>
+        <li>@message.Sender @message.Content @message.Timestamp</li>
     }
 </ul>
 
 @code {
-    private List<string> messages = [];
-    private string? userInput;
-
     private string? messageInput;
 
     protected override async Task OnInitializedAsync()
     {
-        WebClient.OnMessageReceived += UpdateMessageList;
-        await WebClient.StartConnection();
+        // IClient.OnMessageReceived += UpdateMessageList;
+        await Client.StartConnection();
     }
 
     private void UpdateMessageList()
@@ -51,14 +42,14 @@
     {
         if (messageInput != null)
         {
-            Message M = new(WebClient.Username, messageInput, DateTime.Now);
-            await WebClient.SendMessage(M);
+            Message message = new(Client.Username, messageInput, DateTime.Now);
+            await Client.SendMessage(message);
             messageInput = "";
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        WebClient.OnMessageReceived -= UpdateMessageList;
+        // WebClient.OnMessageReceived -= UpdateMessageList;
     }
 }
