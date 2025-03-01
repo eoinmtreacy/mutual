@@ -16,8 +16,14 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
-        // Add device-specific services used by the App.Shared project
+        // Add device-specific services used by the Frontend.Shared project
         builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+        builder.Services.AddSingleton<Client, WebClient>(provider =>
+        {
+            ILogger logger = provider.GetRequiredService<ILogger<WebClient>>();
+            return new WebClient("https://localhost:7088/chat", "eoin", logger);
+        });
 
         builder.Services.AddMauiBlazorWebView();
 
