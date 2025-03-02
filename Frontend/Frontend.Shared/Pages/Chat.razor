@@ -5,13 +5,20 @@
 <PageTitle>Chat</PageTitle>
 
 <div class="form-group">
-    <label>
-        Message:
-        <input @bind="_messageInput" size="50" />
-    </label>
+    <AuthorizeView>
+        <Authorized>
+            <label>
+                Message:
+                <input @bind="_messageInput" size="50" />
+            </label>
+            <button @onclick="Send" disabled="@(!Client.IsConnected())">Send</button>
+        </Authorized>
+        <NotAuthorized>
+            You must be logged in to send a message
+            <LogIn/>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
-
-<button @onclick="Send" disabled="@(!Client.IsConnected())">Send</button>
 
 <hr>
 

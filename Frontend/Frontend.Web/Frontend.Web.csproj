@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Frontend.Shared\Frontend.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />
+  </ItemGroup>
+
 </Project>
