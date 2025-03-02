@@ -1,5 +1,6 @@
 @page "/"
 @using Share.Model
+@using Share.Util
 @inject Client Client
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -10,7 +11,7 @@
         <Authorized>
             <label>
                 Message:
-                <input @bind="_messageInput" size="50" />
+                <input @bind="_messageInput" size="140" />
             </label>
             <button @onclick="Send" disabled="@(!Client.IsConnected())">Send</button>
         </Authorized>
@@ -55,10 +56,18 @@
 
     private async Task Send()
     {
-        if (!string.IsNullOrEmpty(_messageInput))
+        try
         {
-            Message message = new(_currentUser ?? "Unknown user", _messageInput, DateTime.Now);
+            var sanitizedInput = InputSanitizer.Clean(_messageInput);
+            Message message = new(_currentUser ?? "Unknown user", sanitizedInput, DateTime.Now);
             await Client.SendMessage(message);
+        }
+        catch (ArgumentException e)
+        {
+            Client.Log(e);
+        }
+        finally
+        {
             _messageInput = "";
         }
     }

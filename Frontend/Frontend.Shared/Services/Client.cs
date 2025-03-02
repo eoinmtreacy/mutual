@@ -79,8 +79,8 @@ public abstract class Client : IClient
 
     public bool IsConnected() => _connection.State == HubConnectionState.Connected;
     
-    public string? GetConnectionId() => _connection.ConnectionId;
-
+    public void Log(Exception e) => _logger.LogInformation("Connection '{}' - Error: {}", _connection.ConnectionId, e);
+    
     public Task ReceiveMessage(Message message)
     {
         ProcessMessage(message);
