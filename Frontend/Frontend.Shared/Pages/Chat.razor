@@ -47,7 +47,7 @@
     {
         if (!string.IsNullOrEmpty(_messageInput))
         {
-            Message message = new(Client.Username, _messageInput, DateTime.Now);
+            Message message = new(Client.GetConnectionId() ?? "", _messageInput, DateTime.Now);
             await Client.SendMessage(message);
             _messageInput = "";
         }

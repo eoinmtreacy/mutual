@@ -7,7 +7,6 @@ namespace Frontend.Shared.Services;
 
 public abstract class Client : IClient
 {
-    public string Username { get; }
     public List<Message> MessageList { get; }
 
     private readonly string _url;
@@ -16,9 +15,8 @@ public abstract class Client : IClient
 
     public event Action? OnMessageReceived;
 
-    protected Client(string url, string username, ILogger logger)
+    protected Client(string url, ILogger logger)
     {
-        Username = username;
         MessageList = [];
         _url = url;
         _logger = logger;
@@ -45,21 +43,21 @@ public abstract class Client : IClient
     }
     private Task OnConnectionClosed(Exception? e)
     {
-        _logger.LogError("Client '{}' connection to {} closed - Error: {}", Username, _url, e);
+        _logger.LogError("Connection '{}' connection to {} closed - Error: {}", _connection.ConnectionId, _url, e);
         return Task.CompletedTask;
     }
 
     private Task OnReconnecting(Exception? e)
     {
-        _logger.LogError("Client '{}' reconnecting to {} - Error: {}", Username, _url, e);
+        _logger.LogError("Connection '{}' reconnecting to {} - Error: {}", _connection.ConnectionId, _url, e);
         return Task.CompletedTask;
     }
 
     private Task OnReconnected(string? e)
     {
         _logger.LogInformation(
-            "Client '{}' reconnected to {} - Connection Id: {}",
-            Username,
+            "Connection '{}' reconnected to {} - Connection Id: {}",
+            _connection.ConnectionId,
             _url,
             e
         );
@@ -71,21 +69,23 @@ public abstract class Client : IClient
         try
         {
             await _connection.StartAsync();
-            _logger.LogInformation("Client '{}' connected to {}", Username, _url);
+            _logger.LogInformation("Connection '{}' connected to {}", _connection.ConnectionId, _url);
         }
         catch (Exception e)
         {
-            _logger.LogError("Client '{}' failed to connect to {} - Error: {e}", Username, _url, e);
+            _logger.LogError("Connection '{}' failed to connect to {} - Error: {e}", _connection.ConnectionId, _url, e);
         }
     }
 
     public bool IsConnected() => _connection.State == HubConnectionState.Connected;
+    
+    public string? GetConnectionId() => _connection.ConnectionId;
 
     public Task ReceiveMessage(Message message)
     {
         ProcessMessage(message);
         OnMessageReceived?.Invoke();
-        _logger.LogInformation("Client '{}' received message from {}", Username, _url);
+        _logger.LogInformation("Connection '{}' received message from {}", _connection.ConnectionId, _url);
         return Task.CompletedTask;
     }
 

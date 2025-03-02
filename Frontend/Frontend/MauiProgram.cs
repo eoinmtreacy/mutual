@@ -22,7 +22,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<Client, WebClient>(provider =>
         {
             ILogger logger = provider.GetRequiredService<ILogger<WebClient>>();
-            return new WebClient("https://localhost:7088/chat", "eoin", logger);
+            return new WebClient("https://localhost:7088/chat", logger);
         });
 
         builder.Services.AddMauiBlazorWebView();
