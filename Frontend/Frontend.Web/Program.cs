@@ -21,7 +21,7 @@ builder.Services.AddSingleton<IFormFactor, FormFactor>();
 builder.Services.AddScoped<Client, WebClient>(provider =>
 {
     ILogger logger = provider.GetRequiredService<ILogger<WebClient>>();
-    return new WebClient("https://localhost:7088/chat", "eoin", logger);
+    return new WebClient("https://localhost:7088/chat", logger);
 });
 
 var app = builder.Build();
