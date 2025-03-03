@@ -1,7 +1,7 @@
 namespace Share;
 using Model;
 
-public interface IClient
+public interface IChatClient
 {
    public Task ReceiveMessage(Message message);
    

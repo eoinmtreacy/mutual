@@ -19,10 +19,10 @@ public static class MauiProgram
         // Add device-specific services used by the Frontend.Shared project
         builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-        builder.Services.AddSingleton<Client, WebClient>(provider =>
+        builder.Services.AddSingleton<ChatClient, ChatClientApp>(provider =>
         {
-            ILogger logger = provider.GetRequiredService<ILogger<WebClient>>();
-            return new WebClient("https://localhost:7088/chat", logger);
+            ILogger logger = provider.GetRequiredService<ILogger<ChatClientApp>>();
+            return new ChatClientApp("https://localhost:7088/chat", logger);
         });
 
         builder.Services.AddMauiBlazorWebView();

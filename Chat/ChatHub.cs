@@ -5,7 +5,7 @@ using Share.Util;
 
 namespace Chat;
 
-public class ChatHub(ILogger<ChatHub> logger) : Hub<IClient>
+public class ChatHub(ILogger<ChatHub> logger) : Hub<IChatClient>
 {
 
     public async Task SendMessage(Message message)

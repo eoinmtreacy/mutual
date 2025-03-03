@@ -5,7 +5,7 @@ using Share.Model;
 
 namespace Frontend.Shared.Services;
 
-public abstract class Client : IClient
+public abstract class ChatClient : IChatClient
 {
     private readonly string _url;
     private readonly HubConnection _connection;
@@ -13,7 +13,7 @@ public abstract class Client : IClient
 
     public event Action<Message>? OnMessageReceived;
 
-    protected Client(string url, ILogger logger)
+    protected ChatClient(string url, ILogger logger)
     {
         _url = url;
         _logger = logger;
