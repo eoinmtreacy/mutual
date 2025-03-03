@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Frontend.Shared.Services;
 using Frontend.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace Frontend;
 
@@ -22,8 +23,24 @@ public static class MauiProgram
         builder.Services.AddSingleton<ChatClient, ChatClientApp>(provider =>
         {
             ILogger logger = provider.GetRequiredService<ILogger<ChatClientApp>>();
-            return new ChatClientApp("https://localhost:7088/chat", logger);
+            string serviceUrl;
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                serviceUrl = provider.GetRequiredService<IConfiguration>()["ServiceUrls:Android:Chat"] ?? "";
+            }
+            else
+            {
+                serviceUrl = provider.GetRequiredService<IConfiguration>()["ServiceUrls:Web:Chat"] ?? "";
+            }
+            return new ChatClientApp(serviceUrl, logger);
         });
+        
+        builder.Services.AddSingleton<IMessageService, MessageServiceApp>(provider =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            return new MessageServiceApp(configuration["ServiceUrls:Android:Api"] ?? "");
+        });
+
 
         builder.Services.AddMauiBlazorWebView();
 

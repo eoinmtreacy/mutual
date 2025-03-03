@@ -57,7 +57,6 @@
     {
         _messageList.Add(message);
         InvokeAsync(StateHasChanged);
-        IMessageService.AddMessage(message);
     }
 
     private async Task Send()
@@ -66,6 +65,7 @@
         {
             var sanitizedInput = InputSanitizer.Clean(_messageInput);
             var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
+            IMessageService.AddMessage(message);
             await ChatClient.SendMessage(message);
         }
         catch (ArgumentException e)
