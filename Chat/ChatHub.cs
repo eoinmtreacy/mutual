@@ -1,3 +1,4 @@
+using Chat.Data;
 using Microsoft.AspNetCore.SignalR;
 using Share;
 using Share.Model;
@@ -5,22 +6,22 @@ using Share.Util;
 
 namespace Chat;
 
-public class ChatHub(ILogger<ChatHub> logger) : Hub<IClient>
+public class ChatHub(ILogger<ChatHub> logger, IMessageRepository messageRepository) : Hub<IClient>
 {
-    private readonly ILogger _logger = logger;
 
     public async Task SendMessage(Message message)
     {
 		try
 		{
 			var cleanContent = InputSanitizer.Clean(message.Content);
-			var cleanMessage = message with { Content = cleanContent };
+			var cleanMessage = MessageFactory.Create(message.Sender, cleanContent);
+			await messageRepository.AddMessage(cleanMessage);
 			await Clients.All.ReceiveMessage(cleanMessage);
-			_logger.LogInformation("Sending message: '{}' from user: '{}'", cleanMessage.Content, cleanMessage.Sender); 
+			logger.LogInformation("Sending message: '{}' from user: '{}'", cleanMessage.Content, cleanMessage.Sender); 
 		}
 		catch (Exception e)
 		{
-			_logger.LogError("Error sending message: {}", e);
+			logger.LogError("Error sending message: {}", e);
 		}
     }
 
@@ -28,12 +29,12 @@ public class ChatHub(ILogger<ChatHub> logger) : Hub<IClient>
     {
 		try
 		{
-			_logger.LogInformation("Client: '{}', connecting to ChatHub", Context.ConnectionId);
+			logger.LogInformation("Client: '{}', connecting to ChatHub", Context.ConnectionId);
 			await base.OnConnectedAsync();
 		}
 		catch (Exception e)
 		{
-			_logger.LogError("Error connecting client: '{}' to ChatHub -- Error: {}", Context.ConnectionId, e);
+			logger.LogError("Error connecting client: '{}' to ChatHub -- Error: {}", Context.ConnectionId, e);
 		}
     }
 
@@ -41,7 +42,7 @@ public class ChatHub(ILogger<ChatHub> logger) : Hub<IClient>
     {
 		if (e != null)
 		{
-			_logger.LogError("Connection {} disconnected in error: {}", Context.ConnectionId, e);
+			logger.LogError("Connection {} disconnected in error: {}", Context.ConnectionId, e);
 		}
 		await base.OnDisconnectedAsync(e);
     }

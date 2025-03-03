@@ -59,7 +59,7 @@
         try
         {
             var sanitizedInput = InputSanitizer.Clean(_messageInput);
-            Message message = new(_currentUser ?? "Unknown user", sanitizedInput, DateTime.Now);
+            var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
             await Client.SendMessage(message);
         }
         catch (ArgumentException e)
