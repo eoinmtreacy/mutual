@@ -18,10 +18,16 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-builder.Services.AddScoped<Client, WebClient>(provider =>
+builder.Services.AddScoped<Client, ClientWeb>(provider =>
 {
-    ILogger logger = provider.GetRequiredService<ILogger<WebClient>>();
-    return new WebClient("https://localhost:7088/chat", logger);
+    ILogger logger = provider.GetRequiredService<ILogger<ClientWeb>>();
+    return new ClientWeb(builder.Configuration["ServiceUrls:Web:Chat"] ?? "", logger);
+});
+
+builder.Services.AddScoped<IMessageService, MessageServiceWeb>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    return new MessageServiceWeb(configuration["ServiceUrls:Web:Api"] ?? "");
 });
 
 var app = builder.Build();

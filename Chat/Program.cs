@@ -1,16 +1,19 @@
 using Chat;
 
 var builder = WebApplication.CreateBuilder(args);
-string MyAllowedOrigins = "myAllowedOrigins";
+const string myAllowedOrigins = "myAllowedOrigins";
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
-        MyAllowedOrigins,
+        myAllowedOrigins,
         policy =>
         {
             policy
-                .WithOrigins("https://localhost:7208")
+                .WithOrigins(
+                    builder.Configuration["ServiceUrls:Web:Frontend"] ?? "",
+                    builder.Configuration["ServiceUrls:Android:Frontend"] ?? ""
+                    )
                 .WithMethods("GET", "POST")
                 .AllowAnyHeader()
                 .AllowCredentials();
@@ -18,7 +21,7 @@ builder.Services.AddCors(options =>
     );
 });
 var app = builder.Build();
-app.UseCors(MyAllowedOrigins);
-app.MapHub<ChatHub>("/chat");
+app.UseCors(myAllowedOrigins);
+app.MapHub<ChatHub>("");
 app.UseHttpsRedirection();
 app.Run();
