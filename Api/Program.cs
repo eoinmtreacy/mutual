@@ -10,7 +10,10 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("https://localhost:7208")
+                .WithOrigins(
+                    builder.Configuration["ServiceUrls:Web:Frontend"] ?? "",
+                    builder.Configuration["ServiceUrls:Android:Frontend"] ?? ""
+                    )
                 .WithMethods("GET", "POST")
                 .AllowAnyHeader()
                 .AllowCredentials();

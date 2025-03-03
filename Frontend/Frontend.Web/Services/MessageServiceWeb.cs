@@ -3,9 +3,9 @@ using Share.Model;
 
 namespace Frontend.Web.Services;
 
-public class WebMessageService : IMessageService
+public class MessageServiceWeb(string url) : IMessageService
 {
-    private readonly HttpClient _httpClient =  new () { BaseAddress = new Uri("https://localhost:7158") };
+    private readonly HttpClient _httpClient =  new () { BaseAddress = new Uri(url) };
     
     public void AddMessage(Message message)
     {

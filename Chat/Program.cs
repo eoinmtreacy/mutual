@@ -10,7 +10,10 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("https://localhost:7208")
+                .WithOrigins(
+                    builder.Configuration["ServiceUrls:Web:Frontend"] ?? "",
+                    builder.Configuration["ServiceUrls:Android:Frontend"] ?? ""
+                    )
                 .WithMethods("GET", "POST")
                 .AllowAnyHeader()
                 .AllowCredentials();
@@ -19,6 +22,6 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 app.UseCors(myAllowedOrigins);
-app.MapHub<ChatHub>("/chat");
+app.MapHub<ChatHub>("");
 app.UseHttpsRedirection();
 app.Run();

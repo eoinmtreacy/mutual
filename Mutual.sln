@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend.Shared", "Frontend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend\Frontend.csproj", "{AA7FB50E-DA45-4D47-B2E7-CD7D74092E44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{E0BA1054-2114-4C44-BA60-EE582F689850}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{E0BA1054-2114-4C44-BA60-EE582F689850}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
