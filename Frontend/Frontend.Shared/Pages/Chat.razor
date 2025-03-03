@@ -3,6 +3,7 @@
 @using Share.Util
 @inject Client Client
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IMessageService IMessageService
 
 <PageTitle>Chat</PageTitle>
 
@@ -25,18 +26,21 @@
 <hr>
 
 <ul id="messagesList">
-    @foreach (var message in Client.MessageList)
+    @foreach (var message in _messageList)
     {
         <li>@message.Sender @message.Content @message.Timestamp</li>
     }
 </ul>
 
 @code {
+    private List<Message> _messageList = [];
     private string? _messageInput;
     private string? _currentUser;
 
     protected override async Task OnInitializedAsync()
     {
+
+        _messageList = IMessageService.GetMessages();
         Client.OnMessageReceived += HandleMessageReceived;
         await Client.StartConnection();
 
@@ -49,9 +53,11 @@
         }
     }
 
-    private void HandleMessageReceived()
+    private void HandleMessageReceived(Message message)
     {
+        _messageList.Add(message);
         InvokeAsync(StateHasChanged);
+        IMessageService.AddMessage(message);
     }
 
     private async Task Send()

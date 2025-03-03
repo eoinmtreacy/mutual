@@ -1,6 +1,6 @@
 ﻿using Share.Model;
 
-namespace Chat.Data;
+namespace View.Data;
 
 public interface IMessageRepository
 {

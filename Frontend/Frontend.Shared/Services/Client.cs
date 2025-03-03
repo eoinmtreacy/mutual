@@ -7,17 +7,14 @@ namespace Frontend.Shared.Services;
 
 public abstract class Client : IClient
 {
-    public List<Message> MessageList { get; }
-
     private readonly string _url;
     private readonly HubConnection _connection;
     private readonly ILogger _logger;
 
-    public event Action? OnMessageReceived;
+    public event Action<Message>? OnMessageReceived;
 
     protected Client(string url, ILogger logger)
     {
-        MessageList = [];
         _url = url;
         _logger = logger;
         _connection = new HubConnectionBuilder()
@@ -83,12 +80,9 @@ public abstract class Client : IClient
     
     public Task ReceiveMessage(Message message)
     {
-        ProcessMessage(message);
-        OnMessageReceived?.Invoke();
+        OnMessageReceived?.Invoke(message);
         _logger.LogInformation("Connection '{}' received message from {}", _connection.ConnectionId, _url);
         return Task.CompletedTask;
     }
-
-    protected abstract void ProcessMessage(Message message);
     
 }

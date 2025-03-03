@@ -1,4 +1,3 @@
-using Chat.Data;
 using Microsoft.AspNetCore.SignalR;
 using Share;
 using Share.Model;
@@ -6,7 +5,7 @@ using Share.Util;
 
 namespace Chat;
 
-public class ChatHub(ILogger<ChatHub> logger, IMessageRepository messageRepository) : Hub<IClient>
+public class ChatHub(ILogger<ChatHub> logger) : Hub<IClient>
 {
 
     public async Task SendMessage(Message message)
@@ -15,7 +14,6 @@ public class ChatHub(ILogger<ChatHub> logger, IMessageRepository messageReposito
 		{
 			var cleanContent = InputSanitizer.Clean(message.Content);
 			var cleanMessage = MessageFactory.Create(message.Sender, cleanContent);
-			await messageRepository.AddMessage(cleanMessage);
 			await Clients.All.ReceiveMessage(cleanMessage);
 			logger.LogInformation("Sending message: '{}' from user: '{}'", cleanMessage.Content, cleanMessage.Sender); 
 		}

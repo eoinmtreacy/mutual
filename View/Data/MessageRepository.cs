@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Share.Model;
 
-namespace Chat.Data;
+namespace View.Data;
 
 public class MessageRepository(ApplicationDbContext context) : IMessageRepository
 {

@@ -24,6 +24,8 @@ builder.Services.AddScoped<Client, WebClient>(provider =>
     return new WebClient("https://localhost:7088/chat", logger);
 });
 
+builder.Services.AddScoped<IMessageService, WebMessageService>();
+
 var app = builder.Build();
 
 app.MapGet("/Account/Login", async (HttpContext httpContext, string returnUrl = "/") =>
