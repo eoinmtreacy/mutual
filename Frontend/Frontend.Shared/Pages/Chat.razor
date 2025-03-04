@@ -36,11 +36,12 @@
     private List<Message> _messageList = [];
     private string? _messageInput;
     private string? _currentUser;
+    private int _pageNumber = 1;
 
     protected override async Task OnInitializedAsync()
     {
 
-        _messageList = IMessageService.GetMessages();
+        _messageList = IMessageService.GetMessages(_pageNumber);
         ChatClient.OnMessageReceived += HandleMessageReceived;
         await ChatClient.StartConnection();
 

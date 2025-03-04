@@ -4,6 +4,6 @@ namespace View.Data;
 
 public interface IMessageRepository
 {
-    Task<List<Message>> GetMessages();
+    Task<List<Message>> GetMessages(int pageNumber, int pageSize);
     Task<Message> AddMessage(Message message);
 }
