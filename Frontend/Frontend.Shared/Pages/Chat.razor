@@ -4,33 +4,45 @@
 @inject ChatClient ChatClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IMessageService IMessageService
+@inject IJSRuntime JS
 
-<PageTitle>Chat</PageTitle>
+<PageTitle>mutual.ie - chat</PageTitle>
 
-<div class="form-group">
-    <AuthorizeView>
-        <Authorized>
-            <label>
-                Message:
-                <input @bind="_messageInput" size="140" />
-            </label>
-            <button @onclick="Send" disabled="@(!ChatClient.IsConnected())">Send</button>
-        </Authorized>
-        <NotAuthorized>
-            You must be logged in to send a message
-            <LogIn/>
-        </NotAuthorized>
-    </AuthorizeView>
-</div>
-
-<hr>
-
-<ul id="messagesList">
+<MudContainer id="chatContainer" Class="pa-4 my-4" Style="height: 600px; overflow: auto;">
     @foreach (var message in _messageList)
     {
-        <li>@message.Sender @message.Content @message.Timestamp</li>
+        <MudChat ChatPosition=@GetChatBubblePosition(message.Sender)>
+            <MudChatHeader Name=@message.Sender Time=@message.Timestamp.ToString("dd/MM HH:mm")/>
+            <MudChatBubble>
+                @message.Content
+            </MudChatBubble>
+        </MudChat>
     }
-</ul>
+</MudContainer>
+
+<AuthorizeView>
+    <Authorized>
+        <MudText>Chatting as @_currentUser</MudText>
+        <MudTextField T="string" Label="Message" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3"/>
+        <MudButton
+            Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
+            OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
+    </Authorized>
+    <NotAuthorized>
+        You must be logged in to send a message
+        <LogIn/>
+    </NotAuthorized>
+</AuthorizeView>
+
+<script>
+    async function GoToLast(id) {
+        if (!id) return;
+        const container = document.getElementById(id);
+        if (container) {
+            container.scroll({
+                top: 10000000,
+                behavior: "smooth" });}}
+</script>
 
 @code {
     private List<Message> _messageList = [];
@@ -39,17 +51,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         _messageList = IMessageService.GetMessages();
         ChatClient.OnMessageReceived += HandleMessageReceived;
         await ChatClient.StartConnection();
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-
         if (user.Identity?.IsAuthenticated == true)
         {
             _currentUser = user.FindFirst(c => c.Type == "name")?.Value;
+        }
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("GoToLast", "chatContainer");
+        }
+        catch (Exception e)
+        {
+            ChatClient.Log(e);
         }
     }
 
@@ -77,5 +98,14 @@
             _messageInput = "";
         }
     }
-    
+
+    private ChatBubblePosition GetChatBubblePosition(string sender)
+    {
+        if (_currentUser != null && _currentUser == sender)
+        {
+            return ChatBubblePosition.End;
+        }
+        return ChatBubblePosition.Start;
+    }
+
 }

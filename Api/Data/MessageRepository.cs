@@ -9,7 +9,7 @@ public class MessageRepository(ApplicationDbContext context) : IMessageRepositor
    public async Task<List<Message>> GetMessages()
    {
       return await context.Messages
-         .OrderByDescending(m => m.Timestamp)
+         .OrderBy(m => m.Timestamp)
          .ToListAsync();
    }
 

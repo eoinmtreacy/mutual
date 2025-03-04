@@ -15,6 +15,6 @@ public class MessageServiceApp(string url) : IMessageService
 
     public List<Message> GetMessages()
     {
-        return _httpClient.GetFromJsonAsync<List<Message>>("/messages").GetAwaiter().GetResult() ?? [];
+        return _httpClient.GetFromJsonAsync<List<Message>>($"/messages/").GetAwaiter().GetResult() ?? [];
     }
 }

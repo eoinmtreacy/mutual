@@ -1,4 +1,6 @@
-﻿namespace Share.Util;
+﻿using System.Text.RegularExpressions;
+
+namespace Share.Util;
 
 public static class InputSanitizer
 {
@@ -8,7 +10,7 @@ public static class InputSanitizer
         if (string.IsNullOrWhiteSpace(input))
             throw new ArgumentException("Input cannot be null or whitespace.", nameof(input));
         input = input.Trim();
-        input = System.Net.WebUtility.HtmlEncode(input);
+        input = Regex.Replace(input, @"<.*?>", string.Empty);
         return input;
     }
     

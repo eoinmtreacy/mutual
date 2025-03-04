@@ -26,7 +26,7 @@ var app = builder.Build();
 app.UseCors(myAllowedOrigins);
 app.UseHttpsRedirection();
 
-app.MapGet("/messages", async (IMessageRepository messageRepository) =>
+app.MapGet("/messages/", async (IMessageRepository messageRepository) =>
 {
     try
     {
