@@ -12,8 +12,8 @@ public class MessageServiceWeb(string url) : IMessageService
         _httpClient.PostAsJsonAsync("/messages", message);
     }
 
-    public List<Message> GetMessages(int pageNumber)
+    public List<Message> GetMessages()
     {
-        return _httpClient.GetFromJsonAsync<List<Message>>($"/messages/{pageNumber}").GetAwaiter().GetResult() ?? [];
+        return _httpClient.GetFromJsonAsync<List<Message>>($"/messages/").GetAwaiter().GetResult() ?? [];
     }
 }

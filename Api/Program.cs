@@ -26,11 +26,11 @@ var app = builder.Build();
 app.UseCors(myAllowedOrigins);
 app.UseHttpsRedirection();
 
-app.MapGet("/messages/{pageNumber:int}", async (int pageNumber, IMessageRepository messageRepository) =>
+app.MapGet("/messages/", async (IMessageRepository messageRepository) =>
 {
     try
     {
-        var messages = await messageRepository.GetMessages(pageNumber, 5);
+        var messages = await messageRepository.GetMessages();
         return Results.Ok(messages);
     }
     catch (Exception ex)

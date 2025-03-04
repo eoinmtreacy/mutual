@@ -6,12 +6,10 @@ namespace View.Data;
 public class MessageRepository(ApplicationDbContext context) : IMessageRepository
 {
    
-   public async Task<List<Message>> GetMessages(int pageNumber, int pageSize)
+   public async Task<List<Message>> GetMessages()
    {
       return await context.Messages
          .OrderBy(m => m.Timestamp)
-         .Skip((pageNumber - 1) * pageSize) 
-         .Take(pageSize) 
          .ToListAsync();
    }
 
