@@ -4,10 +4,11 @@
 @inject ChatClient ChatClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IMessageService IMessageService
+@inject IJSRuntime JS
 
 <PageTitle>Chat</PageTitle>
 
-<MudPaper Class="pa-4 my-4" Style="height: 400px; overflow: auto;">
+<MudContainer Id="chatContainer" Class="pa-4 my-4" Style="height: 400px; overflow: auto;">
     @foreach (var message in _messageList)
     {
         <MudChat ChatPosition=@GetChatBubblePosition(message.Sender)>
@@ -17,24 +18,34 @@
             </MudChatBubble>
         </MudChat>
     }
-</MudPaper>
+</MudContainer>
 
-<div class="form-group">
-    <AuthorizeView>
-        <Authorized>
-            <MudTextField T="string" Label="Outlined" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3" />
-            <MudButton 
-                Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
-                OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
-        </Authorized>
-        <NotAuthorized>
-            You must be logged in to send a message
-            <LogIn/>
-        </NotAuthorized>
-    </AuthorizeView>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <MudTextField T="string" Label="Outlined" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3" />
+        <MudButton 
+            Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
+            OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
+    </Authorized>
+    <NotAuthorized>
+        You must be logged in to send a message
+        <LogIn/>
+    </NotAuthorized>
+</AuthorizeView>
 
-<hr>
+<script>
+    async function GoToLast(id) {
+        console.log("called" + id)
+        if (!id) return;
+        const container = document.getElementById(id);
+        if (container) {
+            container.scroll({
+                top: 10000000,
+                behavior: "smooth",
+            });
+        }
+    }
+</script>
 
 @code {
     private List<Message> _messageList = [];
@@ -43,18 +54,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         _messageList = IMessageService.GetMessages();
         ChatClient.OnMessageReceived += HandleMessageReceived;
         await ChatClient.StartConnection();
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-
         if (user.Identity?.IsAuthenticated == true)
         {
             _currentUser = user.FindFirst(c => c.Type == "name")?.Value;
         }
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("GoToLast", "chatContainer");
     }
 
     private void HandleMessageReceived(Message message)
