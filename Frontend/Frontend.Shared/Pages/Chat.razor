@@ -8,11 +8,11 @@
 
 <PageTitle>Chat</PageTitle>
 
-<MudContainer Id="chatContainer" Class="pa-4 my-4" Style="height: 400px; overflow: auto;">
+<MudContainer id="chatContainer" Class="pa-4 my-4" Style="height: 600px; overflow: auto;">
     @foreach (var message in _messageList)
     {
         <MudChat ChatPosition=@GetChatBubblePosition(message.Sender)>
-            <MudChatHeader Name=@message.Sender Time=@message.Timestamp.TimeOfDay.ToString()/>
+            <MudChatHeader Name=@message.Sender Time=@message.Timestamp.ToString("dd/MM HH:mm")/>
             <MudChatBubble>
                 @message.Content
             </MudChatBubble>
@@ -22,8 +22,9 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudTextField T="string" Label="Outlined" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3" />
-        <MudButton 
+        <MudText>Chatting as @_currentUser</MudText>
+        <MudTextField T="string" Label="Message" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3"/>
+        <MudButton
             Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
             OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
     </Authorized>
@@ -35,16 +36,12 @@
 
 <script>
     async function GoToLast(id) {
-        console.log("called" + id)
         if (!id) return;
         const container = document.getElementById(id);
         if (container) {
             container.scroll({
                 top: 10000000,
-                behavior: "smooth",
-            });
-        }
-    }
+                behavior: "smooth" });}}
 </script>
 
 @code {
@@ -67,7 +64,14 @@
 
     protected override async void OnAfterRender(bool firstRender)
     {
-        await JS.InvokeVoidAsync("GoToLast", "chatContainer");
+        try
+        {
+            await JS.InvokeVoidAsync("GoToLast", "chatContainer");
+        }
+        catch (Exception e)
+        {
+            ChatClient.Log(e);
+        }
     }
 
     private void HandleMessageReceived(Message message)
@@ -103,5 +107,5 @@
         }
         return ChatBubblePosition.Start;
     }
-    
+
 }
