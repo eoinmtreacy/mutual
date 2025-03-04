@@ -1,8 +1,24 @@
 ﻿<AuthorizeView>
     <Authorized>        
-        <a href="Account/Logout">Log out</a>
+        
+        <MudButton Href="Account/Logout"
+                   Rel="nofollow"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@false">
+            Log Out
+        </MudButton> 
+        
     </Authorized>
     <NotAuthorized>
-        <a href="Account/Login">Log in</a>
+        
+        <MudButton Href="Account/Login"
+                   Rel="nofollow"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@false">
+            Log In
+        </MudButton>
+        
     </NotAuthorized>
 </AuthorizeView>

@@ -7,14 +7,25 @@
 
 <PageTitle>Chat</PageTitle>
 
+<MudPaper Class="pa-4 my-4" Style="height: 400px; overflow: auto;">
+    @foreach (var message in _messageList)
+    {
+        <MudChat ChatPosition=@GetChatBubblePosition(message.Sender)>
+            <MudChatHeader Name=@message.Sender Time=@message.Timestamp.TimeOfDay.ToString()/>
+            <MudChatBubble>
+                @message.Content
+            </MudChatBubble>
+        </MudChat>
+    }
+</MudPaper>
+
 <div class="form-group">
     <AuthorizeView>
         <Authorized>
-            <label>
-                Message:
-                <input @bind="_messageInput" size="140" />
-            </label>
-            <button @onclick="Send" disabled="@(!ChatClient.IsConnected())">Send</button>
+            <MudTextField T="string" Label="Outlined" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3" />
+            <MudButton 
+                Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
+                OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
         </Authorized>
         <NotAuthorized>
             You must be logged in to send a message
@@ -24,13 +35,6 @@
 </div>
 
 <hr>
-
-<ul id="messagesList">
-    @foreach (var message in _messageList)
-    {
-        <li>@message.Sender @message.Content @message.Timestamp</li>
-    }
-</ul>
 
 @code {
     private List<Message> _messageList = [];
@@ -77,6 +81,15 @@
         {
             _messageInput = "";
         }
+    }
+
+    private ChatBubblePosition GetChatBubblePosition(string sender)
+    {
+        if (_currentUser != null && _currentUser == sender)
+        {
+            return ChatBubblePosition.End;
+        }
+        return ChatBubblePosition.Start;
     }
     
 }

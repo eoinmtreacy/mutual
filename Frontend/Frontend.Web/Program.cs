@@ -4,8 +4,11 @@ using Frontend.Web.Services;
 using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMudServices();
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
