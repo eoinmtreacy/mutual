@@ -22,6 +22,14 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(5003);
+    });
+}
+
 var app = builder.Build();
 app.UseCors(myAllowedOrigins);
 app.UseHttpsRedirection();

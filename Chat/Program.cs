@@ -20,6 +20,13 @@ builder.Services.AddCors(options =>
         }
     );
 });
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(5002);
+    });
+}
 var app = builder.Build();
 app.UseCors(myAllowedOrigins);
 app.MapHub<ChatHub>("");

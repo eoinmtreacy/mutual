@@ -33,6 +33,15 @@ builder.Services.AddScoped<IMessageService, MessageServiceWeb>(provider =>
     return new MessageServiceWeb(configuration["ServiceUrls:Web:Api"] ?? "");
 });
 
+
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(5001);
+    });
+}
+
 var app = builder.Build();
 
 app.MapGet("/Account/Login", async (HttpContext httpContext, string returnUrl = "/") =>
