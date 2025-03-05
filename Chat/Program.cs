@@ -29,6 +29,6 @@ if (!builder.Environment.IsDevelopment())
 }
 var app = builder.Build();
 app.UseCors(myAllowedOrigins);
-app.MapHub<ChatHub>("");
+app.MapHub<ChatHub>("/chat");
 app.UseHttpsRedirection();
 app.Run();
