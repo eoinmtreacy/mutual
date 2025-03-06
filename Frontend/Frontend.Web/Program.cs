@@ -43,6 +43,8 @@ if (!builder.Environment.IsDevelopment())
     });
 }
 
+builder.WebHost.UseStaticWebAssets();
+
 var app = builder.Build();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
