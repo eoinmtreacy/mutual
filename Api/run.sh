@@ -14,19 +14,19 @@ fi
 
 # Clean up old publish directory
 echo "Cleaning up"
-rm -rf publish
 dotnet clean
 
-# Updating migrations
+echo "Updating database"
 dotnet ef database update
 
 # Publish the .NET project
 echo "Rebuilding $SERVICE_NAME"
-dotnet publish -o ./publish
+dotnet publish 
 
 # Run the newly published DLL
 echo "Starting $SERVICE_NAME..."
-nohup dotnet "./publish/$SERVICE_NAME.dll" >> /home/ubuntu/logs 2>&1 &
+nohup dotnet "./bin/Release/net9.0/$SERVICE_NAME.dll" >> ./logs 2>&1 &
 
 echo "$SERVICE_NAME deployed and running!"
+
 
