@@ -8,31 +8,38 @@
 
 <PageTitle>mutual.ie - chat</PageTitle>
 
-<MudContainer id="chatContainer" Class="pa-4 my-4" Style="height: 600px; overflow: auto;">
-    @foreach (var message in _messageList)
-    {
-        <MudChat ChatPosition=@GetChatBubblePosition(message.Sender)>
-            <MudChatHeader Name=@message.Sender Time=@message.Timestamp.ToString("dd/MM HH:mm")/>
-            <MudChatBubble>
-                @message.Content
-            </MudChatBubble>
-        </MudChat>
-    }
+<MudContainer Style="display: flex; flex-direction: column; height: 100%; padding: 0">
+
+    <MudContainer id="chatContainer" Class="pa-1 my-1" Style="flex: 1; overflow: auto;">
+        @foreach (var message in _messageList)
+        {
+            <MudChat ChatPosition=@GetChatBubblePosition(message.Sender)>
+                <MudChatHeader Name=@message.Sender Time=@message.Timestamp.ToString("dd/MM HH:mm")/>
+                <MudChatBubble>
+                    @message.Content
+                </MudChatBubble>
+            </MudChat>
+        }
+    </MudContainer>
+
+    <MudContainer Style="flex-shrink: 0" Class="pa-1 my-1">
+        <AuthorizeView>
+            <Authorized>
+                <MudText>Chatting as @_currentUser</MudText>
+                <MudTextField T="string" Label="Message" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3"/>
+                <MudButton
+                    Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
+                    OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
+            </Authorized>
+            <NotAuthorized>
+                You must be logged in to send a message
+                <LogIn/>
+            </NotAuthorized>
+        </AuthorizeView>
+
+    </MudContainer>
 </MudContainer>
 
-<AuthorizeView>
-    <Authorized>
-        <MudText>Chatting as @_currentUser</MudText>
-        <MudTextField T="string" Label="Message" Variant="Variant.Outlined" @bind-value="_messageInput" Lines="3"/>
-        <MudButton
-            Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary"
-            OnClick="Send" Disabled="@(!ChatClient.IsConnected())">Send</MudButton>
-    </Authorized>
-    <NotAuthorized>
-        You must be logged in to send a message
-        <LogIn/>
-    </NotAuthorized>
-</AuthorizeView>
 
 <script>
     async function GoToLast(id) {
