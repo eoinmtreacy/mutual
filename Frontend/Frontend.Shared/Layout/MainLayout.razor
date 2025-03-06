@@ -1,20 +1,25 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <MudThemeProvider />
-    <MudPopoverProvider />
-    <MudDialogProvider />
-    <MudSnackbarProvider /> 
-    <MudLayout>
-        <MudAppBar Fixed="false">
-            <MudText Typo="Typo.h5">mutual.ie</MudText>
+    
+    <MudThemeProvider/>
+    <MudDialogProvider/>
+    <MudSnackbarProvider/>
+
+    <MudLayout Style="height: 100vh; overflow: hidden;">
+        <MudAppBar Elevation="1">
+            <MudText Typo="Typo.h6">mutual.ie</MudText>
             <MudSpacer/>
             <LogIn></LogIn>
         </MudAppBar>
-        <MudMainContent>
-            @Body
+
+        <MudMainContent Style="height: calc(100vh - 64px); overflow: hidden; padding: 0;">
+            <MudContainer MaxWidth="MaxWidth.False" Style="height: 100%; overflow: hidden;" Class="pa-1">
+                @Body
+            </MudContainer>
         </MudMainContent>
     </MudLayout>
+
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
