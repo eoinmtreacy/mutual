@@ -4,6 +4,7 @@ using Frontend.Web.Services;
 using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,11 @@ if (!builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 app.MapGet("/Account/Login", async (HttpContext httpContext, string returnUrl = "/") =>
 {
     var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
@@ -68,8 +74,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
+
+
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
