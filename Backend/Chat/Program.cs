@@ -1,6 +1,8 @@
 using Chat;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+Env.Load(builder.Environment.IsDevelopment() ? "../../.dev.env" : "../../.prod.env");
 const string myAllowedOrigins = "myAllowedOrigins";
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
@@ -11,8 +13,8 @@ builder.Services.AddCors(options =>
         {
             policy
                 .WithOrigins(
-                    builder.Configuration["ServiceUrls:Web:Frontend"] ?? "",
-                    builder.Configuration["ServiceUrls:Android:Frontend"] ?? ""
+                    Environment.GetEnvironmentVariable("FRONTEND_WEB") ?? string.Empty,
+                    Environment.GetEnvironmentVariable("ANDROID_WEB") ?? string.Empty
                     )
                 .WithMethods("GET", "POST")
                 .AllowAnyHeader()
