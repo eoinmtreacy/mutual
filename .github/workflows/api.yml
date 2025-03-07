@@ -1,0 +1,22 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Api redeploy
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    paths: ["Api/**"]
+
+jobs:
+  redeploy:
+    if: github.event.pull_request.merged == true
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Navigating to ./Api
+      run: cd /home/ubuntu/Mutual/Api
+    - name: Rebuilding
+      run: bash run.sh
