@@ -20,18 +20,16 @@ builder.Services
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<IFormFactor, FormFactor>();
-
 builder.Services.AddScoped<ChatClient, ChatClientWeb>(provider =>
 {
     ILogger logger = provider.GetRequiredService<ILogger<ChatClientWeb>>();
     return new ChatClientWeb(builder.Configuration["ServiceUrls:Web:Chat"] ?? "", logger);
 });
 
-builder.Services.AddScoped<IMessageService, MessageServiceWeb>(provider =>
+builder.Services.AddScoped<MessageService>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    return new MessageServiceWeb(configuration["ServiceUrls:Web:Api"] ?? "");
+    ILogger logger = provider.GetRequiredService<ILogger<MessageService>>();
+    return new MessageService(builder.Configuration["ServiceUrls:Web:Api"] ?? "", logger);
 });
 
 
@@ -77,7 +75,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 
 app.UseAntiforgery();
 

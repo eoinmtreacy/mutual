@@ -3,8 +3,8 @@
 @using Share.Util
 @inject ChatClient ChatClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IMessageService IMessageService
-@inject IJSRuntime JS
+@inject MessageService MessageService
+@inject IJSRuntime Js
 
 <PageTitle>mutual.ie - chat</PageTitle>
 
@@ -36,8 +36,8 @@
                 <LogIn/>
             </NotAuthorized>
         </AuthorizeView>
-
     </MudContainer>
+    
 </MudContainer>
 
 
@@ -58,7 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _messageList = IMessageService.GetMessages();
+        _messageList = MessageService.GetMessages();
         ChatClient.OnMessageReceived += HandleMessageReceived;
         await ChatClient.StartConnection();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -73,7 +73,7 @@
     {
         try
         {
-            await JS.InvokeVoidAsync("GoToLast", "chatContainer");
+            await Js.InvokeVoidAsync("GoToLast", "chatContainer");
         }
         catch (Exception e)
         {
@@ -93,7 +93,7 @@
         {
             var sanitizedInput = InputSanitizer.Clean(_messageInput);
             var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
-            IMessageService.AddMessage(message);
+            MessageService.AddMessage(message);
             await ChatClient.SendMessage(message);
         }
         catch (ArgumentException e)
