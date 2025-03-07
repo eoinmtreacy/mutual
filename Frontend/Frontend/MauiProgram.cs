@@ -17,9 +17,6 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
-        // Add device-specific services used by the Frontend.Shared project
-        builder.Services.AddSingleton<IFormFactor, FormFactor>();
-
         builder.Services.AddSingleton<ChatClient, ChatClientApp>(provider =>
         {
             ILogger logger = provider.GetRequiredService<ILogger<ChatClientApp>>();
@@ -35,10 +32,10 @@ public static class MauiProgram
             return new ChatClientApp(serviceUrl, logger);
         });
         
-        builder.Services.AddSingleton<IMessageService, MessageServiceApp>(provider =>
+        builder.Services.AddSingleton<MessageService>(provider =>
         {
             var configuration = provider.GetRequiredService<IConfiguration>();
-            return new MessageServiceApp(configuration["ServiceUrls:Android:Api"] ?? "");
+            return new MessageService(configuration["ServiceUrls:Android:Api"] ?? "");
         });
 
 
