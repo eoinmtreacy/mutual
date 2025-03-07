@@ -2,6 +2,7 @@ using Frontend.Web.Components;
 using Frontend.Shared.Services;
 using Frontend.Web.Services;
 using Auth0.AspNetCore.Authentication;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -16,10 +17,12 @@ builder.Services.AddMudServices(config =>
     }
     );
 
+Env.Load(builder.Environment.IsDevelopment() ? "../../.dev.env" : "../../.prod.env");
+
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
-        options.Domain = builder.Configuration["Auth0:Domain"] ?? string.Empty;
-        options.ClientId = builder.Configuration["Auth0:ClientId"] ?? string.Empty;
+        options.Domain = Environment.GetEnvironmentVariable("AUTH0_DOMAIN") ?? string.Empty;
+        options.ClientId = Environment.GetEnvironmentVariable("AUTH0_CLIENT_ID") ?? string.Empty;
     });
 
 builder.Services.AddRazorComponents()
@@ -28,13 +31,13 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<ChatClient, ChatClientWeb>(provider =>
 {
     ILogger logger = provider.GetRequiredService<ILogger<ChatClientWeb>>();
-    return new ChatClientWeb(builder.Configuration["ServiceUrls:Web:Chat"] ?? "", logger);
+    return new ChatClientWeb(Environment.GetEnvironmentVariable("BACKEND_CHAT_WEB") ?? string.Empty, logger);
 });
 
 builder.Services.AddScoped<MessageService>(provider =>
 {
     ILogger logger = provider.GetRequiredService<ILogger<MessageService>>();
-    return new MessageService(builder.Configuration["ServiceUrls:Web:Api"] ?? "", logger);
+    return new MessageService(Environment.GetEnvironmentVariable("BACKEND_API_WEB") ?? string.Empty, logger);
 });
 
 
