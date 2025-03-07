@@ -34,8 +34,9 @@ public static class MauiProgram
         
         builder.Services.AddSingleton<MessageService>(provider =>
         {
+            ILogger logger = provider.GetRequiredService<ILogger<ChatClientApp>>();
             var configuration = provider.GetRequiredService<IConfiguration>();
-            return new MessageService(configuration["ServiceUrls:Android:Api"] ?? "");
+            return new MessageService(configuration["ServiceUrls:Android:Api"] ?? "", logger);
         });
 
 
