@@ -13,6 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Navigating to ./Api
-      run: cd /home/ubuntu/Mutual/Api
+      run: cd /home/ubuntu/Mutual/Api && pwd && ls
     - name: Rebuilding
       run: bash run.sh
