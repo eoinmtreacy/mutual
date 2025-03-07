@@ -13,5 +13,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: rebuilding
-      working-directory: /home/ubuntu/Mutual/Api
+      working-directory: /home/ubuntu/Mutual/Chat
       run: bash run.sh
