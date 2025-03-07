@@ -1,14 +1,12 @@
 name: Chat redeploy
 
 on:
-  pull_request:
+  push:
     branches: [ "master" ]
     paths: ["Chat/**"]
 
 jobs:
   redeploy:
-    if: github.event.pull_request.merged == true
-
     runs-on: self-hosted
 
     steps:
