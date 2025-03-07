@@ -65,7 +65,7 @@
         ChatClient.OnMessageReceived += HandleMessageReceived;
         
         try { await ChatClient.StartConnection(); }
-        catch { CreateNewInfoPopUp("Unexpected issue with your connection"); }
+        catch { CreateNewInfoPopUp("Chat unavailable: issue with your connection"); }
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -83,7 +83,7 @@
         }
         catch (Exception e)
         {
-            ChatClient.Log(e);
+            Console.WriteLine($"Error scrolling to last : {e}");
         }
     }
 
@@ -95,21 +95,20 @@
 
     private async Task Send()
     {
+        string sanitizedInput = InputSanitizer.Clean(_messageInput);
+        if (string.IsNullOrWhiteSpace(sanitizedInput)) return;
+        var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
         try
         {
-            var sanitizedInput = InputSanitizer.Clean(_messageInput);
-            var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
-            MessageService.AddMessage(message);
             await ChatClient.SendMessage(message);
-        }
-        catch (ArgumentException e)
-        {
-            ChatClient.Log(e);
-        }
-        finally
-        {
+            await MessageService.AddMessage(message);
             _messageInput = "";
         }
+        catch
+        {
+            CreateNewInfoPopUp("Error sending your message, please try again");
+        }
+        
     }
 
     private ChatBubblePosition GetChatBubblePosition(string sender)

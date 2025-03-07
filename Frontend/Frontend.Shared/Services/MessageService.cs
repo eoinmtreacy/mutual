@@ -8,9 +8,16 @@ public class MessageService(string url, ILogger logger)
 {
     private readonly HttpClient _httpClient =  new () { BaseAddress = new Uri(url) };
     
-    public void AddMessage(Message message)
+    public async Task AddMessage(Message message)
     {
-        _httpClient.PostAsJsonAsync("/messages", message);
+        try
+        {
+            await _httpClient.PostAsJsonAsync("/messages", message);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Error sending message: {}", e);
+        }
     }
 
     public List<Message> GetMessages()
