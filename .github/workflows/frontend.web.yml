@@ -1,13 +1,13 @@
 name: Frontend.Web redeploy
 
 on:
-  pull_request:
+  push:
     branches: [ "master" ]
     paths: ["Frontend/Frontend.Web/**", "Frontend/Frontend.Shared/**"]
+  workflow_dispatch:
 
 jobs:
   redeploy:
-    if: github.event.pull_request.merged == true
 
     runs-on: self-hosted
 

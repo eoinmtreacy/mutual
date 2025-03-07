@@ -1,14 +1,13 @@
 name: Api redeploy
 
 on:
-  pull_request:
+  push:
     branches: [ "master" ]
     paths: ["Api/**"]
+  workflow_dispatch:
 
 jobs:
   redeploy:
-    if: github.event.pull_request.merged == true
-
     runs-on: self-hosted
 
     steps:
