@@ -3,8 +3,9 @@
 @using Share.Util
 @inject ChatClient ChatClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IMessageService IMessageService
-@inject IJSRuntime JS
+@inject MessageService MessageService
+@inject IJSRuntime Js
+@inject ISnackbar Snackbar
 
 <PageTitle>mutual.ie - chat</PageTitle>
 
@@ -36,8 +37,8 @@
                 <LogIn/>
             </NotAuthorized>
         </AuthorizeView>
-
     </MudContainer>
+    
 </MudContainer>
 
 
@@ -58,9 +59,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _messageList = IMessageService.GetMessages();
+        try { _messageList = MessageService.GetMessages(); }
+        catch { CreateNewInfoPopUp("Unexpected error getting your messages"); }
+        
         ChatClient.OnMessageReceived += HandleMessageReceived;
-        await ChatClient.StartConnection();
+        
+        try { await ChatClient.StartConnection(); }
+        catch { CreateNewInfoPopUp("Chat unavailable: issue with your connection"); }
+        
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         if (user.Identity?.IsAuthenticated == true)
@@ -73,11 +79,11 @@
     {
         try
         {
-            await JS.InvokeVoidAsync("GoToLast", "chatContainer");
+            await Js.InvokeVoidAsync("GoToLast", "chatContainer");
         }
         catch (Exception e)
         {
-            ChatClient.Log(e);
+            Console.WriteLine($"Error scrolling to last : {e}");
         }
     }
 
@@ -89,21 +95,20 @@
 
     private async Task Send()
     {
+        string sanitizedInput = InputSanitizer.Clean(_messageInput);
+        if (string.IsNullOrWhiteSpace(sanitizedInput)) return;
+        var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
         try
         {
-            var sanitizedInput = InputSanitizer.Clean(_messageInput);
-            var message = MessageFactory.Create(_currentUser ?? "Unknown User", sanitizedInput);
-            IMessageService.AddMessage(message);
             await ChatClient.SendMessage(message);
-        }
-        catch (ArgumentException e)
-        {
-            ChatClient.Log(e);
-        }
-        finally
-        {
+            await MessageService.AddMessage(message);
             _messageInput = "";
         }
+        catch
+        {
+            CreateNewInfoPopUp("Error sending your message, please try again");
+        }
+        
     }
 
     private ChatBubblePosition GetChatBubblePosition(string sender)
@@ -113,6 +118,11 @@
             return ChatBubblePosition.End;
         }
         return ChatBubblePosition.Start;
+    }
+
+    private void CreateNewInfoPopUp(string message)
+    {
+        Snackbar.Add(message);
     }
 
 }

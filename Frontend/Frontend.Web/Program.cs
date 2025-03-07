@@ -5,11 +5,16 @@ using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
+using MudBlazor;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+    {
+        config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+    }
+    );
 
 builder.Services
     .AddAuth0WebAppAuthentication(options => {
@@ -20,18 +25,16 @@ builder.Services
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<IFormFactor, FormFactor>();
-
 builder.Services.AddScoped<ChatClient, ChatClientWeb>(provider =>
 {
     ILogger logger = provider.GetRequiredService<ILogger<ChatClientWeb>>();
     return new ChatClientWeb(builder.Configuration["ServiceUrls:Web:Chat"] ?? "", logger);
 });
 
-builder.Services.AddScoped<IMessageService, MessageServiceWeb>(provider =>
+builder.Services.AddScoped<MessageService>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    return new MessageServiceWeb(configuration["ServiceUrls:Web:Api"] ?? "");
+    ILogger logger = provider.GetRequiredService<ILogger<MessageService>>();
+    return new MessageService(builder.Configuration["ServiceUrls:Web:Api"] ?? "", logger);
 });
 
 
@@ -77,7 +80,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 
 app.UseAntiforgery();
 

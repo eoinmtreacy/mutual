@@ -36,6 +36,7 @@ public abstract class ChatClient : IChatClient
         catch (Exception e)
         {
             _logger.LogError("Error sending message: {} -- Error: {}", message.Content, e);
+            throw new Exception();
         }
     }
     private Task OnConnectionClosed(Exception? e)
@@ -71,12 +72,11 @@ public abstract class ChatClient : IChatClient
         catch (Exception e)
         {
             _logger.LogError("Connection '{}' failed to connect to {} - Error: {e}", _connection.ConnectionId, _url, e);
+            throw new Exception();
         }
     }
 
     public bool IsConnected() => _connection.State == HubConnectionState.Connected;
-    
-    public void Log(Exception e) => _logger.LogInformation("Connection '{}' - Error: {}", _connection.ConnectionId, e);
     
     public Task ReceiveMessage(Message message)
     {
