@@ -5,6 +5,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject MessageService MessageService
 @inject IJSRuntime Js
+@inject ISnackbar Snackbar
 
 <PageTitle>mutual.ie - chat</PageTitle>
 
@@ -58,9 +59,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _messageList = MessageService.GetMessages();
+        try { _messageList = MessageService.GetMessages(); }
+        catch { CreateNewInfoPopUp("Unexpected error getting your messages"); }
+        
         ChatClient.OnMessageReceived += HandleMessageReceived;
-        await ChatClient.StartConnection();
+        
+        try { await ChatClient.StartConnection(); }
+        catch { CreateNewInfoPopUp("Unexpected issue with your connection"); }
+        
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         if (user.Identity?.IsAuthenticated == true)
@@ -113,6 +119,11 @@
             return ChatBubblePosition.End;
         }
         return ChatBubblePosition.Start;
+    }
+
+    private void CreateNewInfoPopUp(string message)
+    {
+        Snackbar.Add(message);
     }
 
 }

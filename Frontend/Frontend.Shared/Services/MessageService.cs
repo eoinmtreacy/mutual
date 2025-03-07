@@ -22,7 +22,7 @@ public class MessageService(string url, ILogger logger)
         catch (Exception e)
         {
             logger.LogError("Error getting messages: {}", e.Message);
-            return [];
+            throw new Exception();
         }
     }
 }

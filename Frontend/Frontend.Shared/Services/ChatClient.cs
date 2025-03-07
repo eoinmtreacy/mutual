@@ -71,6 +71,7 @@ public abstract class ChatClient : IChatClient
         catch (Exception e)
         {
             _logger.LogError("Connection '{}' failed to connect to {} - Error: {e}", _connection.ConnectionId, _url, e);
+            throw new Exception();
         }
     }
 
