@@ -7,12 +7,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  frontend-redeploy:
-
+  frontend-web-redeploy:
     runs-on: self-hosted
-
     steps:
-    - uses: actions/checkout@v4
-    - name: rebuilding
-      working-directory: /home/ubuntu/Mutual/Frontend/Frontend.Web/
-      run: bash run.sh
+      - uses: actions/checkout@v4
+      
+      - name: Building
+        working-directory: ./Frontend/Frontend.Web/
+        run: |
+          dotnet publish -o ./publish
+      
+      - name: Deploy to service directory
+        run: |
+          # Stop the service first
+          sudo systemctl stop frontend.web.service
+          
+          # Clear the target directory and copy new files
+          sudo rm -rf /var/www/Frontend/Frontend.Web/*
+          sudo cp -r $GITHUB_WORKSPACE/Frontend/Frontend.Web/publish/* /var/www/Frontend/Frontend.Web/
+          
+          # Set correct permissions
+          sudo chown -R ubuntu:ubuntu /var/www/Frontend/Frontend.Web/
+          sudo chmod -R 755 /var/www/Frontend/Frontend.Web/
+          
+          # Start the service again
+          sudo systemctl start frontend.web.service
+          
+      - name: Verify service is running
+        run: |
+          sleep 5
+          sudo systemctl status frontend.web.service
