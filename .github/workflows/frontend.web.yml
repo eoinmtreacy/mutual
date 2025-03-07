@@ -1,0 +1,19 @@
+name: Frontend.Web redeploy
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    paths: ["Frontend/Frontend.Web/**", "Frontend/Frontend.Shared/**"]
+
+jobs:
+  redeploy:
+    if: github.event.pull_request.merged == true
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Navigating to ./Frontend/Frontend.Web
+      run: cd /home/ubuntu/Mutual/Frontend/Frontend.Web/
+    - name: Rebuilding
+      run: bash run.sh

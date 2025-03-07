@@ -1,0 +1,19 @@
+name: Chat redeploy
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    paths: ["Chat/**"]
+
+jobs:
+  redeploy:
+    if: github.event.pull_request.merged == true
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Navigating to ./Chat
+      run: cd /home/ubuntu/Mutual/Chat
+    - name: Rebuilding
+      run: bash run.sh
