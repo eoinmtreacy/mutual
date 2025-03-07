@@ -7,13 +7,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  redeploy:
+  frontend-redeploy:
 
     runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v4
-    - name: Navigating to ./Frontend/Frontend.Web
-      run: cd /home/ubuntu/Mutual/Frontend/Frontend.Web/
-    - name: Rebuilding
+    - name: rebuilding
+      working-directory: /home/ubuntu/Mutual/Frontend/Frontend.Web/
       run: bash run.sh

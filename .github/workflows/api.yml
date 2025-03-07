@@ -7,12 +7,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  redeploy:
+  api-redeploy:
     runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v4
-    - name: Navigating to ./Api
-      run: cd /home/ubuntu/Mutual/Api && pwd && ls
-    - name: Rebuilding
+    - name: rebuilding
+      working-directory: /home/ubuntu/Mutual/Api
       run: bash run.sh
